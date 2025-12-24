@@ -19,3 +19,5 @@ CMakeUserPresets.json
 *.vsidx
 .vs/Snake_Game.slnx/FileContentIndex/251e0ba4-2e59-42ca-873d-7882f8bc7941.vsidx
 .vs/Snake_Game.slnx/v18/Browse.VC.opendb
+/out
+/out/build/x64-Debug
