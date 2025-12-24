@@ -66,7 +66,7 @@ class Food {
 
 		void Draw() {
 			//Draw food here
-			DrawCircle(pos.x*cellSize,pos.y*cellSize,cellSize/2,RED);
+			DrawCircle((pos.x*cellSize)/2,(pos.y*cellSize)/2,cellSize/2,RED);
 			//DrawTexture(texture, pos.x*cellSize, pos.y*cellSize); // Apple is too large will not be loading any images
 		}
 
@@ -79,14 +79,29 @@ class Food {
 
 };
 
+class Game {
+public:
+	Snake snake = Snake();
+	Food food = Food();
+
+	void Draw() {
+		food.Draw();
+		snake.Draw();
+	}
+
+	void Update() {
+		snake.Update();
+	}
+
+};
+
 int main() {
 	cout << "Opening Snake Game Window..." << endl;
 
 	InitWindow(cellSize*cellCount, cellSize * cellCount, "Snake Game"); //Creates the window for our game
 	SetTargetFPS(60); //Sets the target FPS for our game
 
-	Food apple = Food();
-	Snake snake = Snake();
+	Game game = Game();
 
 	while (WindowShouldClose() == false) { //Game Loop
 
@@ -95,26 +110,26 @@ int main() {
 		//Drawing screen
 		ClearBackground(green);
 
-		apple.Draw();
-		snake.Draw();
-
 		if(eventTriggered(0.2)){
 			//cout << "Updating Snake Position..." << endl;
-			snake.Update();
+			game.Update();
 		}
 
-		if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && snake.direction.y != 1) {
-			snake.direction = { 0,-1 };
+		if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && game.snake.direction.y != 1) {
+			game.snake.direction = { 0,-1 };
 		}
-		if ((IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) && snake.direction.y != -1) {
-			snake.direction = { 0,1 };
+		if ((IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) && game.snake.direction.y != -1) {
+			game.snake.direction = { 0,1 };
 		}
-		if ((IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) && snake.direction.x != 1) {
-			snake.direction = { -1,0 };
+		if ((IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) && game.snake.direction.x != 1) {
+			game.snake.direction = { -1,0 };
 		}
-		if ((IsKeyPressed(KEY_RIGHT) ||IsKeyPressed(KEY_D))&& snake.direction.x != -1) {
-			snake.direction = { 1,0 };
+		if ((IsKeyPressed(KEY_RIGHT) ||IsKeyPressed(KEY_D))&& game.snake.direction.x != -1) {
+			game.snake.direction = { 1,0 };
 		}
+
+		ClearBackground(green);
+		game.Draw();
 
 		EndDrawing();
 
