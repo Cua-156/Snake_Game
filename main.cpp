@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <iostream>
 #include <deque>
+#include <rayMath.h>
 
 using namespace std;
 
@@ -10,9 +11,21 @@ Color darkGreen = { 40,50,25,255 };
 int cellSize = 30;
 int cellCount = 25;
 
+double lastUpdateTime = 0;
+
+bool eventTriggered(double interval) {
+	double currentTime = GetTime();
+	if (currentTime - lastUpdateTime >= interval) {
+		lastUpdateTime = currentTime;
+		return true;
+	}
+	return false;
+}
+
 class Snake {
 	public:
 		deque<Vector2> body = {Vector2(6,9), Vector2(5,9), Vector2(4,9)}; //Deque (double ended queue) to store the body parts of the snake
+		Vector2 direction = { 1,0 };
 
 		void Draw() {
 			for (Vector2 part : body) {
@@ -23,6 +36,11 @@ class Snake {
 				Rectangle rec = { x * cellSize, y * cellSize, (float)cellSize, (float)cellSize };
 				DrawRectangleRounded(rec, 0.5, 6, darkGreen);
 			}
+		}
+
+		void Update() {
+			body.pop_back();
+			body.push_front(Vector2Add(body[0],direction));
 		}
 };
 
@@ -79,6 +97,11 @@ int main() {
 
 		apple.Draw();
 		snake.Draw();
+
+		if (eventTriggered(0.2)){
+			//cout << "Updating Snake Position..." << endl;
+			snake.Update();
+		}
 
 		EndDrawing();
 
