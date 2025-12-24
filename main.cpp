@@ -22,6 +22,15 @@ bool eventTriggered(double interval) {
 	return false;
 }
 
+bool CheckDequeElement(Vector2 element, deque<Vector2> deque) {
+	for (int i = 0; i < deque.size(); i++) {
+		if (Vector2Equals(deque[i], element)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 class Snake {
 	public:
 		deque<Vector2> body = {Vector2(6,9), Vector2(5,9), Vector2(4,9)}; //Deque (double ended queue) to store the body parts of the snake
@@ -50,8 +59,8 @@ class Food {
 		Vector2 pos; //Vector with {x, y} used for postion of our food
 		//Texture2D texture; // Apple is too large will not be loading any images
 
-		Food() {
-			pos = randPos();
+		Food(deque <Vector2> snakeBody) {
+			pos = randPos(snakeBody);
 			/* 
 			Apple is too large will not be loading any images
 			Image image = LoadImage("Graphics/apple.png");
@@ -66,32 +75,51 @@ class Food {
 
 		void Draw() {
 			//Draw food here
-			DrawCircle((pos.x*cellSize)/2,(pos.y*cellSize)/2,cellSize/2,RED);
+			// center the circle inside the grid cell
+			DrawCircle(pos.x * cellSize + cellSize/2.0f, pos.y * cellSize + cellSize/2.0f, cellSize/2, RED);
 			//DrawTexture(texture, pos.x*cellSize, pos.y*cellSize); // Apple is too large will not be loading any images
 		}
 
-		Vector2 randPos() {
+		Vector2 GenerateRandomPos() {
 			int x = GetRandomValue(0, cellCount - 1);
 			int y = GetRandomValue(0, cellCount - 1);
+			return Vector2{ (float)x, (float)y };
+		}
 
-			return Vector2{(float)x, (float)y};
+		Vector2 randPos(deque<Vector2> snakeBody) {
+			Vector2 pos = GenerateRandomPos();
+
+			while (CheckDequeElement(pos, snakeBody)) {
+				pos = GenerateRandomPos();
+			}
+
+			return pos;
 		}
 
 };
 
 class Game {
-public:
-	Snake snake = Snake();
-	Food food = Food();
+	public:
+		Snake snake = Snake();
+		Food food = Food(snake.body);
 
-	void Draw() {
-		food.Draw();
-		snake.Draw();
-	}
+		void Draw() {
+			food.Draw();
+			snake.Draw();
+		}
 
-	void Update() {
-		snake.Update();
-	}
+		void Update() {
+			snake.Update();
+			CheckCollision();
+		}
+
+		void CheckCollision() {
+			//Check collision between snake and food
+			if (Vector2Equals(snake.body[0], food.pos)){
+				cout << "Eating Food" << endl;
+				food.pos = food.randPos(snake.body);
+			}
+		}
 
 };
 
