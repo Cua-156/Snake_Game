@@ -31,7 +31,7 @@ class Snake {
 			for (Vector2 part : body) {
 				float x = part.x;
 				float y = part.y;
-				cout << "x is" << x << " y is " << y << endl;
+				//cout << "x is" << x << " y is " << y << endl;
 				//DrawRectangle(x*cellSize, y*cellSize, cellSize, cellSize, darkGreen);
 				Rectangle rec = { x * cellSize, y * cellSize, (float)cellSize, (float)cellSize };
 				DrawRectangleRounded(rec, 0.5, 6, darkGreen);
@@ -98,9 +98,22 @@ int main() {
 		apple.Draw();
 		snake.Draw();
 
-		if (eventTriggered(0.2)){
+		if(eventTriggered(0.2)){
 			//cout << "Updating Snake Position..." << endl;
 			snake.Update();
+		}
+
+		if ((IsKeyPressed(KEY_UP) || IsKeyPressed(KEY_W)) && snake.direction.y != 1) {
+			snake.direction = { 0,-1 };
+		}
+		if ((IsKeyPressed(KEY_DOWN) || IsKeyPressed(KEY_S)) && snake.direction.y != -1) {
+			snake.direction = { 0,1 };
+		}
+		if ((IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_A)) && snake.direction.x != 1) {
+			snake.direction = { -1,0 };
+		}
+		if ((IsKeyPressed(KEY_RIGHT) ||IsKeyPressed(KEY_D))&& snake.direction.x != -1) {
+			snake.direction = { 1,0 };
 		}
 
 		EndDrawing();

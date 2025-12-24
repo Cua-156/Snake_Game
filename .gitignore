@@ -21,3 +21,4 @@ CMakeUserPresets.json
 .vs/Snake_Game.slnx/v18/Browse.VC.opendb
 /out
 /out/build/x64-Debug
+/out
